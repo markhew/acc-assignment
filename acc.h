@@ -25,6 +25,9 @@
 #define	SERV_TCP_PORT	52001
 #define	OK	52001
 #define	SA	struct sockaddr
+#define MAXCLIENTS 10
+#define NOCONN 0
+#define CONN 1
 /* Our own header for the programs that use threads.
    Include this file, instead of "unp.h". */
 
@@ -60,14 +63,17 @@ void	Pthread_once(pthread_once_t *, void (*)(void));
 /*Max idle time for a client*/
 extern int max_idle_time;
 
-struct connection
+typedef struct connection
 {
-	char* nickname;
-	char* hostname;
-	char* realname;
+	int status;
+	char nickname[10];
+	char hostname[10];
+	char realname[20];
+	int sockfd;
+	time_t joined;
 	/* data */
-};
+} strCon;
 
-typedef struct connection strCon;
 
-extern strCon* connections; //Array to store information on connections
+extern strCon connections[MAXCLIENTS]; //Array to store information on connections
+extern pthread_mutex_t connection_mutex;

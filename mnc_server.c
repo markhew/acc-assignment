@@ -6,10 +6,15 @@
 static void	*doit(void *);		/* each thread executes this function */
 static void *rejectConn(void *);
 
+
+
 //mutex for count for number of clients
 pthread_mutex_t numClient_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t connection_mutex = PTHREAD_MUTEX_INITIALIZER;
+
 int		numClients;
 int		max_clients, max_idle_time;
+strCon connections[MAXCLIENTS];
 
 int
 main(int argc, char **argv)
@@ -51,6 +56,10 @@ main(int argc, char **argv)
 	timeout.tv_sec = max_idle_time;
 
 
+	//Setting up the connection list for the server
+	for(int i=0; i<MAXCLIENTS;i++){
+		resetCon(i);
+	}
 
 
 	cliaddr = (struct sockaddr *) Malloc(addrlen);
@@ -103,3 +112,5 @@ rejectConn(void *arg)
 
 	return (NULL);		
 }
+
+

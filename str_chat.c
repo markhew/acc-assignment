@@ -1,6 +1,5 @@
 #include	"acc.h"
 
-void join(int, char*);
 void
 str_chat(int sockfd)
 {
@@ -33,16 +32,8 @@ str_chat(int sockfd)
 		else{
 			printf("Invalid Command : %s\n",cmd);
 		}
-
-
 		Writen(sockfd, line, n);
 	}
 }
 
-void 
-join(int sockfd, char* rest){
-	printf("JOINING CHAT\n" );
-	
 
-
-}
