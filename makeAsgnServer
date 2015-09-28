@@ -1,5 +1,5 @@
-Server: error.o wrapunix.o wrapsock.o wraplib.o wrapstdio.o asgnServer.o readline.o writen.o tcp_listen.o wrappthread.o str_echo.o str_chat.o
-	cc -o Server wrappthread.o str_echo.o str_chat.o error.o wrapunix.o wrapsock.o wraplib.o wrapstdio.o asgnServer.o readline.o writen.o tcp_listen.o -lpthread
+Server: error.o wrapunix.o wrapsock.o wraplib.o wrapstdio.o mnc_server.o readline.o writen.o tcp_listen.o wrappthread.o str_echo.o str_chat.o
+	cc -o Server wrappthread.o str_echo.o str_chat.o error.o wrapunix.o wrapsock.o wraplib.o wrapstdio.o mnc_server.o readline.o writen.o tcp_listen.o -lpthread -g
 
 error.o: error.c acc.h
 	cc -c -w error.c
@@ -19,8 +19,8 @@ wraplib.o: wraplib.c acc.h
 wrapstdio.o: wrapstdio.c acc.h
 	cc -c -w wrapstdio.c
 
-asgnServer.o: asgnServer.c acc.h
-	cc -c -w asgnServer.c
+mnc_server.o: mnc_server.c acc.h
+	cc -c -w mnc_server.c
 
 str_echo.o: str_echo.c acc.h
 	cc -c -w str_echo.c

@@ -2,7 +2,12 @@
 
 
 
+
 static void	*doit(void *);		/* each thread executes this function */
+static void *rejectConn(void *);
+
+//mutex for count for number of clients
+pthread_mutex_t numClient_mutex = PTHREAD_MUTEX_INITIALIZER;
 int		numClients;
 int		max_clients, max_idle_time;
 
@@ -11,9 +16,12 @@ main(int argc, char **argv)
 {
 	int		listenfd, connfd;
 	socklen_t	addrlen, len;
-	pthread_t	tid;
+	pthread_t	tid,cid;
+
 	struct sockaddr	*cliaddr;
+	struct timeval timeout;
 	numClients = 0;
+
 
 
 	if (argc == 4){
@@ -40,15 +48,30 @@ main(int argc, char **argv)
 		err_quit("Max idle time must be between 1 and 120");
 	}
 
+	timeout.tv_sec = max_idle_time;
+
+
+
+
 	cliaddr = (struct sockaddr *) Malloc(addrlen);
 
 	for ( ; ; ) {
 		len = addrlen;
+
 		connfd = Accept(listenfd, cliaddr, &len);
 
-		Pthread_create(&tid, NULL, &doit, (void *) connfd);
-		numClients++;
-		printf("%d clients connected\n", numClients);
+		if(numClients < max_clients){
+			Pthread_create(&tid, NULL, &doit, (void *) connfd);
+	
+			pthread_mutex_lock(&numClient_mutex);
+			numClients++;
+			pthread_mutex_unlock(&numClient_mutex);
+
+		}
+
+		else{
+			Pthread_create(&cid, NULL, &rejectConn, (void*) connfd);
+		}
 	}
 }
 
@@ -58,7 +81,25 @@ doit(void *arg)
 	Pthread_detach(pthread_self());
 	str_chat((int) arg);	 /*same function as before */
 	Close((int) arg);	/* we are done with connected socket */
+
+	pthread_mutex_lock(&numClient_mutex);
 	numClients--;
-	printf("%d clients connected\n", numClients);
+	pthread_mutex_unlock(&numClient_mutex);
+
 	return(NULL);
+}
+
+//Close connection after sending a single reject message
+static void *
+rejectConn(void *arg)
+{
+	Pthread_detach(pthread_self());
+
+	char* connRef = "Sorry, Please Try again later \n";
+	size_t n = strlen(connRef);
+	
+	Writen((int)arg, connRef, n);
+	Shutdown((int)arg,SHUT_WR);
+
+	return (NULL);		
 }

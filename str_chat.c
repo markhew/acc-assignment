@@ -1,30 +1,37 @@
 #include	"acc.h"
 
-void join(int);
+void join(int, char*);
 void
 str_chat(int sockfd)
 {
 	ssize_t		n;
 	char		line[MAXLINE];
+	clock_t		tmr;
 
 	for ( ; ; ) {
-		if ( (n = Readline(sockfd, line, MAXLINE)) == 0)
-			return;		/* connection closed by other end */
+		n = Readline(sockfd, line, MAXLINE);
 		
+		if ( n == 0){
+			return;		/* connection closed by other end */
+		}
+
 		char str[MAXLINE];
 		strcpy(str,line);
 
-   		char *token;
+   		char *cmd;
+   		char *rest;
+
    
 
-   		token = strtok(str, " ");
+   		cmd = strtok(str, " ");
+      	rest = strtok(NULL, "\n");
 
-		if(strcmp(token,"JOIN")==0){
-			join(sockfd);
+
+		if(strcmp(cmd,"JOIN")==0){
+			join(sockfd,rest);
 		}   
 		else{
-			printf("Invalid Command : %s\n",token);
-			printf("%s\n", str);
+			printf("Invalid Command : %s\n",cmd);
 		}
 
 
@@ -33,6 +40,9 @@ str_chat(int sockfd)
 }
 
 void 
-join(int sockfd){
+join(int sockfd, char* rest){
 	printf("JOINING CHAT\n" );
+	
+
+
 }

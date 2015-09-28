@@ -59,3 +59,15 @@ void	Pthread_once(pthread_once_t *, void (*)(void));
 
 /*Max idle time for a client*/
 extern int max_idle_time;
+
+struct connection
+{
+	char* nickname;
+	char* hostname;
+	char* realname;
+	/* data */
+};
+
+typedef struct connection strCon;
+
+extern strCon* connections; //Array to store information on connections
