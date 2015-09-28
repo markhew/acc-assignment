@@ -1,0 +1,34 @@
+tcpserv01.out: error.o wrapunix.o wrapsock.o wraplib.o wrapstdio.o tcpserv01.o readline.o writen.o tcp_listen.o wrappthread.o str_echo.o
+	cc -o tcpserv01.out wrappthread.o str_echo.o error.o wrapunix.o wrapsock.o wraplib.o wrapstdio.o tcpserv01.o readline.o writen.o tcp_listen.o -lpthread
+
+error.o: error.c acc.h
+	cc -c error.c
+
+tcp_listen.o: tcp_listen.c acc.h
+	cc -c tcp_listen.c
+
+wrapunix.o: wrapunix.c acc.h
+	cc -c wrapunix.c
+
+wrapsock.o: wrapsock.c acc.h
+	cc -c wrapsock.c
+
+wraplib.o: wraplib.c acc.h
+	cc -c wraplib.c
+
+wrapstdio.o: wrapstdio.c acc.h
+	cc -c wrapstdio.c
+
+tcpserv01.o: tcpserv01.c acc.h
+	cc -c tcpserv01.c
+
+str_echo.o: str_echo.c acc.h
+	cc -c str_echo.c
+
+readline.o: readline.c acc.h
+	cc -c readline.c
+
+writen.o: writen.c acc.h
+	cc -c writen.c
+wrappthread.o: wrappthread.c acc.h
+	cc -c wrappthread.c
