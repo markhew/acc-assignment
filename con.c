@@ -13,12 +13,13 @@ resetCon(int index){
 
 }
 
-void
+
+int
 setCon(int fd, char* nick, char* host, char* real){
 	pthread_mutex_lock(&connection_mutex);
 	int idx = -1;
 	//Loop through the connections to find the first free one
-	for(int i=0; i< MAXLINE; i++){
+	for(int i=0; i< MAXCLIENTS; i++){
 		if(idx < 0){
 			if(connections[i].status == NOCONN){
 				idx = i;
@@ -35,14 +36,37 @@ setCon(int fd, char* nick, char* host, char* real){
 
 	pthread_mutex_unlock(&connection_mutex);
 
-	if(idx >= 0){
-		printf("HELLO\n");
-		printf("STATUS %d\n", connections[idx].status);
-		printf("FD %d\n", connections[idx].sockfd);
-		printf("NICKNAME %s\n", connections[idx].nickname);
-		printf("HOSTNAME %s\n", connections[idx].hostname);
-		printf("REALNAME %s\n", connections[idx].realname);
+	
+	return idx;
 
+}
+
+//Finds the index of the appropriate socket fd in the connections array
+int 
+findConnFD(int fd){
+	int idx = -1;
+	pthread_mutex_lock(&connection_mutex);
+	for(int i=0; i<MAXCLIENTS;i++){
+		if(idx < 0){
+			if(connections[i].sockfd == fd){
+				idx = i;
+			}
+		}
 	}
+	pthread_mutex_unlock(&connection_mutex);
+	return idx;
+}
+
+void
+broadcast(char* msg, int index){
+	pthread_mutex_lock(&connection_mutex);
+
+	for(int i=0;i<MAXCLIENTS;i++){
+		if(connections[i].status == CONN && index != i){
+			Writen(connections[i].sockfd,msg, strlen(msg));
+		}
+	}
+	pthread_mutex_unlock(&connection_mutex);
+
 
 }

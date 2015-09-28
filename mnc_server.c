@@ -87,13 +87,22 @@ main(int argc, char **argv)
 static void *
 doit(void *arg)
 {
+	int index;
 	Pthread_detach(pthread_self());
 	str_chat((int) arg);	 /*same function as before */
+
+	index = findConnFD((int)arg); //Need to reset the associated connection structure
+	if(index >=0){
+		resetCon(index);
+	}
 	Close((int) arg);	/* we are done with connected socket */
+
+
 
 	pthread_mutex_lock(&numClient_mutex);
 	numClients--;
 	pthread_mutex_unlock(&numClient_mutex);
+
 
 	return(NULL);
 }

@@ -39,7 +39,6 @@ join(int sockfd, char* str){
 
 				for (int i = 0; i < MAXCLIENTS; ++i)
 				{
-					printf("FD : %d\n", connections[i].sockfd);
 					if(sockfd == connections[i].sockfd){
 						fDfound = i;
 					}
@@ -65,7 +64,14 @@ join(int sockfd, char* str){
 					
 				}
 				else{
-					setCon(sockfd, nickname, hostname, realname);
+					int conIdx = setCon(sockfd, nickname, hostname, realname);
+					if(conIdx >=0){
+						char msg[100], bmsg[100];
+						snprintf(msg, sizeof(msg), "Server : JOIN %s %s %s. Welcome to MNC!\n", nickname, hostname, realname);
+						Writen(sockfd,msg,strlen(msg));
+						snprintf(bmsg, sizeof(bmsg), "Server : Let us welcome a new user - %s\n",nickname);
+						broadcast(bmsg,conIdx);
+					}
 				}
 			}
 		}
