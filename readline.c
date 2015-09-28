@@ -59,5 +59,24 @@ Readline(int fd, void *ptr, size_t maxlen)
 
 	if ( (n = readline(fd, ptr, maxlen)) < 0)
 		err_sys("readline error");
+
+	return(n);
+}
+
+
+ssize_t
+Readline2(int fd, void *ptr, size_t maxlen)
+{
+	ssize_t		n;
+	void* ptr2;
+
+
+	if ( (n = readline(fd, ptr2, maxlen)) < 0)
+		err_sys("readline error");
+
+	ptr = ptr2;
+
+	//ptr = ptr2;
+	printf("READ %s\n",(char*)ptr);
 	return(n);
 }
