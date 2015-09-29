@@ -5,7 +5,7 @@ join(int sockfd, char* str){
 
 	printf("JOINING CHAT\n" );
 	char names[MAXLINE];
-	if(str != NULL){
+	if(str != NULL && strcmp(str,"")!=0){
 		strcpy(names,str);
 
 		char* nickname, *hostname, *realname;

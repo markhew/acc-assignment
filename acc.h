@@ -70,7 +70,7 @@ typedef struct connection
 	char hostname[10];
 	char realname[20];
 	int sockfd;
-	time_t joined;
+	time_t time_joined;
 	/* data */
 } strCon;
 

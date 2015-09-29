@@ -1,5 +1,7 @@
 #include	"acc.h"
 
+int stringChar(char*,char);
+
 void
 str_chat(int sockfd)
 {
@@ -13,27 +15,67 @@ str_chat(int sockfd)
 		if ( n == 0){
 			return;		/* connection closed by other end */
 		}
+		
 
 		char str[MAXLINE];
 		strcpy(str,line);
 
+
    		char *cmd;
    		char *rest;
-
-   
-
+   		
+		int spc = stringChar(str,' ');
+		if(spc < 0){
+			if(strlen(str) == 1){ //In Case user only enters '\n'
+				char c[2] = " ";
+				strcat(str,c);
+			}
+			cmd = strtok(str, "\n");
+			rest = strdup("");
+		}	
+		else{
    		cmd = strtok(str, " ");
       	rest = strtok(NULL, "\n");
-
+      	}
 
 		if(strcmp(cmd,"JOIN")==0){
 			join(sockfd,rest);
-		}   
-		else{
-			printf("Invalid Command : %s\n",cmd);
 		}
-		Writen(sockfd, line, n);
+		else if(strcmp(cmd,"WHOIS")==0){
+			if(rest == NULL || strcmp(rest,"")==0){
+				Writen(sockfd, "Who is who?\n",15);
+			}
+			else{
+				whois(sockfd,rest);
+			}
+		}
+		else if(strcmp(cmd,"TIME")==0){
+			showTime(sockfd);
+		}
+		else if(strcmp(cmd,"QUIT")==0){
+			return;
+		}
+		else{
+			char* invalMsg = "Enter Valid Command(JOIN, MSG, WHOIS, TIME, ALIVE, QUIT)\n";
+
+			Writen(sockfd,invalMsg,strlen(invalMsg));
+		}
+	
 	}
+}
+
+
+int
+stringChar(char* string, char c){
+	int idx = -1;
+	int i;
+
+	for(i=0;i<strlen(string);i++){
+		if(string[i] == c){
+			idx = i;
+		}
+	}
+	return idx;
 }
 
 

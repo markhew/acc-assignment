@@ -32,6 +32,7 @@ setCon(int fd, char* nick, char* host, char* real){
 		strcpy(connections[idx].hostname, host);
 		strcpy(connections[idx].realname, real);
 		connections[idx].sockfd = fd;
+		time(&connections[idx].time_joined);
 	}
 
 	pthread_mutex_unlock(&connection_mutex);
@@ -46,7 +47,8 @@ int
 findConnFD(int fd){
 	int idx = -1;
 	pthread_mutex_lock(&connection_mutex);
-	for(int i=0; i<MAXCLIENTS;i++){
+	int i;
+	for( i=0; i<MAXCLIENTS;i++){
 		if(idx < 0){
 			if(connections[i].sockfd == fd){
 				idx = i;
@@ -60,13 +62,27 @@ findConnFD(int fd){
 void
 broadcast(char* msg, int index){
 	pthread_mutex_lock(&connection_mutex);
-
-	for(int i=0;i<MAXCLIENTS;i++){
+	int i;
+	for(i=0;i<MAXCLIENTS;i++){
 		if(connections[i].status == CONN && index != i){
 			Writen(connections[i].sockfd,msg, strlen(msg));
 		}
 	}
 	pthread_mutex_unlock(&connection_mutex);
+}
 
-
+int
+findNickName(char* nickname){
+	int idx = -1;
+	pthread_mutex_lock(&connection_mutex);
+	int i;
+	for( i=0; i<MAXCLIENTS;i++){
+		if(idx < 0){
+			if(strcmp(connections[i].nickname, nickname) == 0){
+				idx = i;
+			}
+		}
+	}
+	pthread_mutex_unlock(&connection_mutex);
+	return idx;
 }
