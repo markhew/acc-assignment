@@ -52,6 +52,9 @@ str_chat(int sockfd)
 		else if(strcmp(cmd,"TIME")==0){
 			showTime(sockfd);
 		}
+		else if(strcmp(cmd,"MSG")==0){
+			message(sockfd,rest);
+		}
 		else if(strcmp(cmd,"QUIT")==0){
 			return;
 		}

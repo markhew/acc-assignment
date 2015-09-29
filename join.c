@@ -3,7 +3,11 @@
 void 
 join(int sockfd, char* str){
 
-	printf("JOINING CHAT\n" );
+	//Setting error messages for message input lengths and format;
+	char* format = "Server : JOIN <NICKNAME> <HOSTNAME> <REALNAME>\n";
+	char* nicklen = "Server : Nickname cannot exceed 10 characters\n";
+	char* hostlen = "Server : Hostname cannot exceed 10 characters\n";
+	char* reallen = "Server : Realname cannot exceed 20 characters\n";
 	char names[MAXLINE];
 	if(str != NULL && strcmp(str,"")!=0){
 		strcpy(names,str);
@@ -15,18 +19,18 @@ join(int sockfd, char* str){
 
 		//Check if there is actually a hostname and realname in the join command
 		if(hostname == NULL || realname == NULL){
-			Writen(sockfd,"JOIN <NICKNAME> <HOSTNAME> <REALNAME>\n", 40);
+			Writen(sockfd,format, strlen(format));
 		}
 		else{	
 			//Check that names do not exceed allocated character length
 			if(strlen(nickname) > 10){
-				Writen(sockfd,"Nickname cannot exceed 10 characters\n", 40);
+				Writen(sockfd,nicklen, strlen(nicklen));
 			}
 			if(strlen(hostname) > 10){
-				Writen(sockfd,"Hostname cannot exceed 10 characters\n", 40);
+				Writen(sockfd,hostlen, strlen(hostlen));
 			}
 			if(strlen(realname) > 10){
-				Writen(sockfd,"Realname cannot exceed 20 characters\n", 40);
+				Writen(sockfd,reallen, strlen(hostlen));
 			}
 			else{
 
@@ -51,17 +55,21 @@ join(int sockfd, char* str){
 				}
 				pthread_mutex_unlock(&connection_mutex);
 
+				//Setting error messages for if names are in use
+				char* rnFoundMsg = "Server : You are already connected to MNC\n";
+				char* nnFoundMsg = "Server : Nickname already in use\n";
+				char* aJoinedMsg = "Server : Already connected, please QUIT to start new Connection\n";
+
 				//If real name or nickname is not unique, do not let user connect
 				if(realnameFound >= 0){
-					Writen(sockfd, "You are already connected\n",30);
+					Writen(sockfd, rnFoundMsg,strlen(rnFoundMsg));
 				}
 				else if(nicknameFound >= 0){
 
-					Writen(sockfd, "Nickname taken\n",23);
+					Writen(sockfd, nnFoundMsg,strlen(nnFoundMsg));
 				}
 				else if(fDfound >= 0){
-						Writen(sockfd, "Already connected, please QUIT to start new Connection\n",60);
-					
+						Writen(sockfd, aJoinedMsg, strlen(aJoinedMsg));	
 				}
 				else{
 					int conIdx = setCon(sockfd, nickname, hostname, realname);
@@ -77,7 +85,7 @@ join(int sockfd, char* str){
 		}
 	}
 	else{
-		Writen(sockfd,"JOIN <NICKNAME> <HOSTNAME> <REALNAME>\n", 40);
+		Writen(sockfd,format,strlen(format));
 	}
 	
 	

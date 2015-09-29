@@ -20,12 +20,12 @@ whois(int sockfd, char* nickname){
 		time_joined = connection.time_joined;
 
 
-		char data[40];
-		snprintf(data,sizeof(data),"Hostname : %s\n",hostname);
+		char data[50];
+		snprintf(data,sizeof(data),"Server : (Hostname)  %s\n",hostname);
 		Writen(sockfd,data,strlen(data));
-		snprintf(data,sizeof(data),"Realname : %s\n",realname);
+		snprintf(data,sizeof(data),"Server : (Realname) %s\n",realname);
 		Writen(sockfd,data,strlen(data));
-		strftime(data,sizeof(data),"Time Joined : %X\n", localtime(&time_joined));
+		strftime(data,sizeof(data),"Server : (Joined) %X\n", localtime(&time_joined));
 		Writen(sockfd,data,strlen(data));
 		
 		pthread_mutex_unlock(&connection_mutex);
@@ -34,7 +34,7 @@ whois(int sockfd, char* nickname){
 		
 	}
 }
-
+//Function to display the current local time for the server to the client
 void
 showTime(int sockfd){
 	time_t t;
@@ -44,7 +44,7 @@ showTime(int sockfd){
 	currTime = localtime(&t);
 
 	char sTime[60];
-	strftime(sTime,sizeof(sTime),"Server local time : %X\n", currTime);
+	strftime(sTime,sizeof(sTime),"Server : Local time here %X\n", currTime);
 	
 	Writen(sockfd,sTime,strlen(sTime));
 }
