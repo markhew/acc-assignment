@@ -58,10 +58,26 @@ Readline(int fd, void *ptr, size_t maxlen)
 	ssize_t		n;
 
 	if ( (n = readline(fd, ptr, maxlen)) < 0){
-		if(errno == EAGAIN){
-			return 35;
-		}
+		
 		err_sys("readline error %d", errno);
+	}
+	return(n);
+}
+
+//Functions similar to Readline except it catches EAGAIN's from
+//Time outs and returns it to caller
+ssize_t
+ReadlineTIMED(int fd, void *ptr, size_t maxlen, int *status)
+{
+	ssize_t		n;
+	*status = 0;
+	if ( (n = readline(fd, ptr, maxlen)) < 0){
+		if(errno == EAGAIN){
+			*status = EAGAIN;
+		}
+		else{
+			err_sys("readline error %d", errno);
+		}
 	}
 	return(n);
 }

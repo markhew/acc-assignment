@@ -92,11 +92,12 @@ main(int argc, char **argv)
 static void *
 doit(void *arg)
 {
-	int index, cli_fd, status;
+	int index, cli_fd;
 	cli_fd = (int) arg;
+	Setsockopt(cli_fd,SOL_SOCKET,SO_RCVTIMEO,&timeout, sizeof(timeout));
 
 	Pthread_detach(pthread_self());
-	status = str_chat(cli_fd);	 /*same function as before */
+	str_chat(cli_fd);	 /*same function as before */
 
 	index = findConnFD(cli_fd); //Need to reset the associated connection structure
 	if(index >=0){

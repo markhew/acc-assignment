@@ -2,21 +2,22 @@
 
 int stringChar(char*,char);
 
-int
+void
 str_chat(int sockfd)
 {
 	ssize_t		n;
 	char		line[MAXLINE];
-	clock_t		tmr;
+	char*		timed_out_msg = "Server : Timed out\n";
+	int*		status;
 
 	for ( ; ; ) {
-		n = Readline(sockfd, line, MAXLINE);
-		
+		n = ReadlineTIMED(sockfd, line, MAXLINE, &status);
 		if ( n == 0){
-			return 0;		/* connection closed by other end */
+			return;		/* connection closed by other end */
 		}
-		if( n== EAGAIN){
-			printf("EAGAIN\n");
+		if( status == EAGAIN){ //If we receive an EAGAIN, make the time out occured
+			Writen(sockfd,timed_out_msg,strlen(timed_out_msg));
+			return;
 		}
 		
 
@@ -60,7 +61,7 @@ str_chat(int sockfd)
 		}
 		else if(strcmp(cmd,"QUIT")==0){
 			quit(sockfd,rest);
-			return 0;
+			return;
 		}
 		else{
 			char* invalMsg = "Enter Valid Command(JOIN, MSG, WHOIS, TIME, ALIVE, QUIT)\n";
