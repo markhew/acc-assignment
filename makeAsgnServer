@@ -1,5 +1,5 @@
-Server: error.o wrapunix.o wrapsock.o wraplib.o wrapstdio.o mnc_server.o readline.o writen.o tcp_listen.o wrappthread.o str_echo.o str_chat.o join.o con.o commands.o message.o
-	cc -o Server wrappthread.o str_echo.o str_chat.o error.o wrapunix.o wrapsock.o wraplib.o wrapstdio.o mnc_server.o readline.o writen.o tcp_listen.o join.o con.o commands.o message.o -lpthread -g
+Server: error.o wrapunix.o wrapsock.o wraplib.o wrapstdio.o mnc_server.o readline.o writen.o tcp_listen.o wrappthread.o str_echo.o str_chat.o join.o con.o commands.o message.o signal.o
+	cc -o Server wrappthread.o str_echo.o str_chat.o error.o wrapunix.o wrapsock.o wraplib.o wrapstdio.o mnc_server.o readline.o writen.o tcp_listen.o join.o con.o commands.o message.o signal.o -lpthread -g
 
 error.o: error.c acc.h
 	cc -c -w error.c
@@ -47,3 +47,6 @@ commands.o: commands.c acc.h
 
 message.o: message.c acc.h
 	cc -c -w message.c
+
+signal.o: signal.c acc.h
+	cc -c -w signal.c

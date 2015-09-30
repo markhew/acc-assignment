@@ -16,13 +16,15 @@ int		numClients;
 int		max_clients, max_idle_time;
 struct 	timeval timeout;
 strCon connections[MAXCLIENTS];
-
 int
 main(int argc, char **argv)
 {
-	int		listenfd, connfd;
+	int		listenfd, connfd, maxfd;
 	socklen_t	addrlen, len;
 	pthread_t	tid,cid;
+
+	fd_set			rset, allset;
+
 
 	struct sockaddr	*cliaddr;
 	numClients = 0;
@@ -32,6 +34,7 @@ main(int argc, char **argv)
 	if (argc == 4){
 
 		listenfd = Tcp_listen(NULL, argv[1], &addrlen);
+		maxfd = listenfd;
 		max_clients = atoi(argv[2]);
 		max_idle_time = atoi(argv[3]);
 
@@ -59,32 +62,50 @@ main(int argc, char **argv)
 
 
 
+
 	//Setting up the connection list for the server
 	for(int i=0; i<MAXCLIENTS;i++){
 		resetCon(i);
 	}
 
 
+
+	FD_ZERO(&allset);
+	FD_SET(listenfd, &allset);
+
 	cliaddr = (struct sockaddr *) Malloc(addrlen);
 
 	for ( ; ; ) {
-		len = addrlen;
+		rset = allset;		/* structure assignment */
 
-		connfd = Accept(listenfd, cliaddr, &len);
-
-		if(numClients < max_clients){
-			Pthread_create(&tid, NULL, &doit, (void *) connfd);
-			
+		Select(maxfd+1, &rset, NULL, NULL, NULL);
 
 
-			pthread_mutex_lock(&numClient_mutex);
-			numClients++;
-			pthread_mutex_unlock(&numClient_mutex);
+		if (FD_ISSET(listenfd, &rset)) {	/* new client connection */
 
-		}
+			len = addrlen;
+			connfd = Accept(listenfd, cliaddr, &len);
 
-		else{
-			Pthread_create(&cid, NULL, &rejectConn, (void*) connfd);
+			if(numClients < max_clients){
+				if(connfd > maxfd){
+					maxfd = connfd;
+				}
+				Pthread_create(&tid, NULL, &doit, (void *) connfd);
+				
+				pthread_mutex_lock(&numClient_mutex);
+				numClients++;
+				pthread_mutex_unlock(&numClient_mutex);
+				FD_SET(connfd, &allset);/* add new descriptor to set */
+				
+				fdSetStruct fss;
+				fss.sockfd = connfd;
+				fss.allset = allset;
+
+			}
+
+			else{
+				Pthread_create(&cid, NULL, &rejectConn, (void*)fss);
+			}
 		}
 	}
 }
@@ -93,7 +114,7 @@ static void *
 doit(void *arg)
 {
 	int index, cli_fd;
-	cli_fd = (int) arg;
+	cli_fd = ((fdSetStruct*) arg)->sockfd;
 
 	Pthread_detach(pthread_self());
 	str_chat(cli_fd);	 /*same function as before */

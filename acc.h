@@ -13,6 +13,8 @@
 #include <sys/socket.h>
 #include <pthread.h>
 #include <sys/stat.h>
+#include <signal.h>
+
 
 
 #ifdef	HAVE_PTHREAD_H
@@ -73,7 +75,11 @@ typedef struct connection
 	time_t time_joined;
 	/* data */
 } strCon;
-
+typedef struct 
+{
+	int sockfd;
+	fd_set allset;
+} fdSetStruct;
 
 extern strCon connections[MAXCLIENTS]; //Array to store information on connections
 extern pthread_mutex_t connection_mutex;

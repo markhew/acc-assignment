@@ -20,11 +20,13 @@ strCon connections[MAXCLIENTS];
 int
 main(int argc, char **argv)
 {
-	int		listenfd, connfd;
+	int			listenfd, connfd;
 	socklen_t	addrlen, len;
 	pthread_t	tid,cid;
 
-	struct sockaddr	*cliaddr;
+	SA			*cliaddr;
+	void		sig_pipe(int);
+
 	numClients = 0;
 
 
@@ -64,6 +66,7 @@ main(int argc, char **argv)
 		resetCon(i);
 	}
 
+	Signal(SIGPIPE, sig_pipe);
 
 	cliaddr = (struct sockaddr *) Malloc(addrlen);
 
@@ -94,7 +97,7 @@ doit(void *arg)
 {
 	int index, cli_fd;
 	cli_fd = (int) arg;
-
+	Setsockopt(cli_fd,SOL_SOCKET,SO_RCVTIMEO,&timeout, sizeof(timeout));
 	Pthread_detach(pthread_self());
 	str_chat(cli_fd);	 /*same function as before */
 

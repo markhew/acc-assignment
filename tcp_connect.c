@@ -47,3 +47,13 @@ Tcp_connect(const char *host, const char *serv)
 {
 	return(tcp_connect(host, serv));
 }
+
+/*
+Set the timeout for the socket
+*/
+void
+Set_Timeout(int sockfd, int timeout_sec){
+	struct timeval timeout;
+	timeout.tv_sec = timeout_sec;
+	timeout.tv_usec = 0;
+}

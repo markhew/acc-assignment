@@ -243,3 +243,4 @@ isfdtype (int fildes, int fdtype)
 
   return result ?: (st.st_mode & S_IFMT) == (mode_t) fdtype;
 }
+
