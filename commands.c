@@ -48,3 +48,37 @@ showTime(int sockfd){
 	
 	Writen(sockfd,sTime,strlen(sTime));
 }
+
+void
+quit(int sockfd, char* qMsg){
+	char quitMsg[256];
+	char* default_msg = "Bye all!\n";
+	char msg[256];
+	char nickname[20]; //Nickname cant be more than 20 characters long
+	int connIdx = findConnFD(sockfd);
+	
+	if(connIdx >= 0){ //Dont send a message if not joined	
+
+		//Get the nickname of the connected client
+		pthread_mutex_lock(&connection_mutex);
+		strcpy(nickname,connections[connIdx].nickname);
+		pthread_mutex_unlock(&connection_mutex);
+
+		//If there is no quit message, use the default one
+		if(qMsg == NULL || strcmp(qMsg,"")==0){
+			strcpy(quitMsg, default_msg);
+		}
+		else{
+			strcpy(quitMsg,qMsg);
+		}
+
+		snprintf(msg,sizeof(msg),"%s : %s\n",nickname,quitMsg);
+
+		//Broadcast the quit message
+		broadcast(msg,connIdx);
+
+
+	}
+
+
+}

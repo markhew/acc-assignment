@@ -65,6 +65,7 @@ findConnFD(int fd){
 //Broadcasts a message to all other connections that are connected
 void
 broadcast(char* msg, int index){
+
 	pthread_mutex_lock(&connection_mutex);
 	int i;
 	for(i=0;i<MAXCLIENTS;i++){

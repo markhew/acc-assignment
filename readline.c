@@ -58,6 +58,9 @@ Readline(int fd, void *ptr, size_t maxlen)
 	ssize_t		n;
 
 	if ( (n = readline(fd, ptr, maxlen)) < 0){
+		if(errno == EAGAIN){
+			return 35;
+		}
 		err_sys("readline error %d", errno);
 	}
 	return(n);

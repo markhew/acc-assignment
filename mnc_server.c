@@ -92,11 +92,11 @@ main(int argc, char **argv)
 static void *
 doit(void *arg)
 {
-	int index, cli_fd;
+	int index, cli_fd, status;
 	cli_fd = (int) arg;
 
 	Pthread_detach(pthread_self());
-	str_chat(cli_fd);	 /*same function as before */
+	status = str_chat(cli_fd);	 /*same function as before */
 
 	index = findConnFD(cli_fd); //Need to reset the associated connection structure
 	if(index >=0){

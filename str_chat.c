@@ -2,7 +2,7 @@
 
 int stringChar(char*,char);
 
-void
+int
 str_chat(int sockfd)
 {
 	ssize_t		n;
@@ -13,7 +13,10 @@ str_chat(int sockfd)
 		n = Readline(sockfd, line, MAXLINE);
 		
 		if ( n == 0){
-			return;		/* connection closed by other end */
+			return 0;		/* connection closed by other end */
+		}
+		if( n== EAGAIN){
+			printf("EAGAIN\n");
 		}
 		
 
@@ -56,7 +59,8 @@ str_chat(int sockfd)
 			message(sockfd,rest);
 		}
 		else if(strcmp(cmd,"QUIT")==0){
-			return;
+			quit(sockfd,rest);
+			return 0;
 		}
 		else{
 			char* invalMsg = "Enter Valid Command(JOIN, MSG, WHOIS, TIME, ALIVE, QUIT)\n";
