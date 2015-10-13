@@ -52,32 +52,15 @@ readline(int fd, void *vptr, size_t maxlen)
 }
 /* end readline */
 
+/* Wrapper function to readline, EAGAIN is handled in the str_chat for timeouts*/
 ssize_t
 Readline(int fd, void *ptr, size_t maxlen)
 {
 	ssize_t		n;
 
 	if ( (n = readline(fd, ptr, maxlen)) < 0){
-		
-		err_sys("readline error %d", errno);
-	}
-	return(n);
-}
-
-//Functions similar to Readline except it catches EAGAIN's from
-//Time outs and returns it to caller
-ssize_t
-ReadlineTIMED(int fd, void *ptr, size_t maxlen, int *status)
-{
-	ssize_t		n;
-	*status = 0;
-	if ( (n = readline(fd, ptr, maxlen)) < 0){
-		if(errno == EAGAIN){
-			*status = EAGAIN;
-		}
-		else{
+		if(errno != EAGAIN)
 			err_sys("readline error %d", errno);
-		}
 	}
 	return(n);
 }
