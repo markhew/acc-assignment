@@ -4,6 +4,8 @@
 void 
 message(int senderFd, char* target_msg){
 
+	char* fmsg = strdup(target_msg);//String to store message in case there is no target
+
 	char* no_conn = "Server : You must JOIN before you can send messages\n";
 	char* wrong_format = "Server : MSG <target> <message> required\n";	
 	char* empty_msg = "Server : Your message has no text\n";
@@ -24,12 +26,21 @@ message(int senderFd, char* target_msg){
 
 	char* target;
 	target = strtok(target_msg, " ");
+
 	
 	int targetIndex = findNickName(target);
-	if(targetIndex < 0){ //IF nickname is not found notify sender and end
+	/*if(targetIndex < 0){ //IF nickname is not found notify sender and end
 		char no_target[60];
 		snprintf(no_target,sizeof(no_target),"Server : User \"%s\" not found\n",target);
 		Writen(senderFd,no_target,strlen(no_target));
+		return;
+	}*/
+	if(targetIndex < 0){ //If the nickname is not found assume that the message is for everyone
+		char b_msg[300]; //
+		char* sender = connections[senderIdx].nickname;
+
+		snprintf(b_msg, sizeof(b_msg),"%s : %s\n",sender,fmsg);
+		broadcast(b_msg,senderIdx);
 		return;
 	}
 

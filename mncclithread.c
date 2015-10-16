@@ -29,28 +29,9 @@ copyto(void *arg)
 {
 	char	sendline[MAXLINE];
 	char 	line[MAXLINE]; //for client side validation
-	char* cmd;
 	while ((void *) Fgets(sendline, MAXLINE, fp) != NULL)
 	{
-		strcpy(line,sendline);
-
-		cmd = strtok(line," ");
-
-
-		if(strcmp(cmd,"JOIN") == 0 || strcmp(cmd,"JOIN\n") ==0 ||
-			strcmp(cmd,"MSG") == 0 || strcmp(cmd,"MSG\n") ==0 ||
-			strcmp(cmd,"WHOIS") == 0 || strcmp(cmd,"WHOIS\n") ==0 ||
-			strcmp(cmd,"TIME") == 0 || strcmp(cmd,"TIME\n") ==0 ||
-			strcmp(cmd,"ALIVE") == 0 || strcmp(cmd,"ALIVE\n") ==0 ||
-			strcmp(cmd,"QUIT") == 0 || strcmp(cmd,"QUIT\n") ==0
-			)
-		{
-			Writen(sockfd, sendline, strlen(sendline));
-		}
-
-		else{
-			printf("Invalid Command, valid commands are :\nJOIN, MSG, WHOIS, TIME, ALIVE, QUIT\n" );
-		}	
+		validate(sockfd,sendline);	//Validates and sends the input	
 	}
 
 	Shutdown(sockfd, SHUT_WR);	/* EOF on stdin, send FIN */

@@ -1,5 +1,5 @@
-client: error.o wrapunix.o wrapsock.o wraplib.o wrapstdio.o mnc_client.o readline.o writen.o tcp_listen.o wrappthread.o mncclithread.o
-	cc -o client wrappthread.o mncclithread.o error.o wrapunix.o wrapsock.o wraplib.o wrapstdio.o mnc_client.o readline.o writen.o tcp_listen.o -lpthread
+client: error.o wrapunix.o wrapsock.o wraplib.o wrapstdio.o mnc_client.o readline.o writen.o tcp_listen.o wrappthread.o mncclithread.o validClient.o
+	cc -o client wrappthread.o mncclithread.o error.o wrapunix.o wrapsock.o wraplib.o wrapstdio.o mnc_client.o readline.o writen.o tcp_listen.o validClient.o -lpthread
 
 error.o: error.c acc.h
 	cc -c -w error.c
@@ -32,3 +32,7 @@ writen.o: writen.c acc.h
 	cc -c -w writen.c
 wrappthread.o: wrappthread.c acc.h
 	cc -c -w wrappthread.c
+
+validClient.o: validClient.c acc.h
+	cc -c -w validClient.c
+
