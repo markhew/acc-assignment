@@ -83,3 +83,5 @@ typedef struct
 
 extern strCon connections[MAXCLIENTS]; //Array to store information on connections
 extern pthread_mutex_t connection_mutex;
+extern struct timeval timeout;
+

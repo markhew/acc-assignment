@@ -14,7 +14,6 @@ pthread_mutex_t connection_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 int		numClients;
 int		max_clients, max_idle_time;
-struct 	timeval timeout;
 strCon connections[MAXCLIENTS];
 
 int
@@ -94,7 +93,6 @@ doit(void *arg)
 {
 	int index, cli_fd;
 	cli_fd = (int) arg;
-	Setsockopt(cli_fd,SOL_SOCKET,SO_RCVTIMEO,&timeout, sizeof(timeout));
 
 	Pthread_detach(pthread_self());
 	str_chat(cli_fd);	 /*same function as before */

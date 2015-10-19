@@ -1,5 +1,5 @@
-Server2: error.o wrapunix.o wrapsock.o wraplib.o wrapstdio.o mnc_server2.o readline.o writen.o tcp_listen.o wrappthread.o str_echo.o str_chat.o join.o con.o commands.o message.o
-	cc -o Server2 wrappthread.o str_echo.o str_chat.o error.o wrapunix.o wrapsock.o wraplib.o wrapstdio.o mnc_server2.o readline.o writen.o tcp_listen.o join.o con.o commands.o message.o -lpthread -g
+Server2: error.o wrapunix.o wrapsock.o wraplib.o wrapstdio.o mnc_server.o readlinethread.o writen.o tcp_listen.o wrappthread.o str_echo.o str_chat.o join.o con.o commands.o message.o
+	cc -o Server2 wrappthread.o str_echo.o str_chat.o error.o wrapunix.o wrapsock.o wraplib.o wrapstdio.o mnc_server.o readlinethread.o writen.o tcp_listen.o join.o con.o commands.o message.o -lpthread -g
 
 error.o: error.c acc.h
 	cc -c -w error.c
@@ -19,14 +19,14 @@ wraplib.o: wraplib.c acc.h
 wrapstdio.o: wrapstdio.c acc.h
 	cc -c -w wrapstdio.c
 
-mnc_server2.o: mnc_server2.c acc.h
-	cc -c -w mnc_server2.c
+mnc_server.o: mnc_server.c acc.h
+	cc -c -w mnc_server.c
 
 str_echo.o: str_echo.c acc.h
 	cc -c -w str_echo.c
 
-readline.o: readline.c acc.h
-	cc -c -w readline.c
+readlinethread.o: readlinethread.c acc.h
+	cc -c -w readlinethread.c
 
 writen.o: writen.c acc.h
 	cc -c -w writen.c

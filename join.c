@@ -79,6 +79,9 @@ join(int sockfd, char* str){
 						Writen(sockfd,msg,strlen(msg));
 						snprintf(bmsg, sizeof(bmsg), "Server : Let us welcome a new user - %s\n",nickname);
 						broadcast(bmsg,conIdx);
+						Setsockopt(sockfd,SOL_SOCKET,SO_RCVTIMEO,&timeout, sizeof(timeout));
+						//Set a timeout countdown after successfully joining
+
 					}
 				}
 			}

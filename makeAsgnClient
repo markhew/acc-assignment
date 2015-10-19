@@ -36,3 +36,7 @@ wrappthread.o: wrappthread.c acc.h
 validClient.o: validClient.c acc.h
 	cc -c -w validClient.c
 
+readlinethread.o: readlinethread.c acc.h
+	cc -c -w readlinethread.c
+
+

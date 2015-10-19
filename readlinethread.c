@@ -27,11 +27,16 @@ typedef struct {
 static ssize_t
 my_read(Rline *tsd, int fd, char *ptr)
 {
+
 	if (tsd->rl_cnt <= 0) {
 again:
 		if ( (tsd->rl_cnt = read(fd, tsd->rl_buf, MAXLINE)) < 0) {
-			if (errno == EINTR)
+			if (errno == EINTR){
 				goto again;
+			}
+			else{
+				printf("%d\n",errno);
+			}
 			return(-1);
 		} else if (tsd->rl_cnt == 0)
 			return(0);
@@ -49,15 +54,15 @@ readline(int fd, void *vptr, size_t maxlen)
 	int		n, rc;
 	char	c, *ptr;
 	Rline	*tsd;
-
 	Pthread_once(&rl_once, readline_once);
 	if ( (tsd = pthread_getspecific(rl_key)) == NULL) {
 		tsd = (Rline *) Calloc(1, sizeof(Rline));   /* init to 0 */
 		Pthread_setspecific(rl_key, tsd);
 	}
-
+	
 	ptr = vptr;
 	for (n = 1; n < maxlen; n++) {
+
 		if ( (rc = my_read(tsd, fd, &c)) == 1) {
 			*ptr++ = c;
 			if (c == '\n')
@@ -70,7 +75,6 @@ readline(int fd, void *vptr, size_t maxlen)
 		} else
 			return(-1);		/* error, errno set by read() */
 	}
-
 	*ptr = 0;
 	return(n);
 }
