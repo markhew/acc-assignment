@@ -13,20 +13,20 @@ whois(int sockfd, char* nickname){
 		if(connection.sockfd == sockfd){
 			Writen(sockfd, msg, strlen(msg));
 		}	
-		char hostname[10], realname[20];//Since these values are fixed from the begininng
+		char hostname[HOSTLEN], realname[REALLEN];//Since these values are fixed from the begininng
 		time_t time_joined;
 		strcpy(hostname,connection.hostname);
 		strcpy(realname,connection.realname);
 		time_joined = connection.time_joined;
 
 
-		char data[50];
-		snprintf(data,sizeof(data),"Server : (Hostname)  %s\n",hostname);
-		Writen(sockfd,data,strlen(data));
-		snprintf(data,sizeof(data),"Server : (Realname) %s\n",realname);
-		Writen(sockfd,data,strlen(data));
-		strftime(data,sizeof(data),"Server : (Joined) %X\n", localtime(&time_joined));
-		Writen(sockfd,data,strlen(data));
+		char nData[100];
+		char tData[50];
+		char sData[150];
+		snprintf(nData,sizeof(nData),"Server : (Hostname)  %s\nServer : (Realname) %s\n",hostname,realname);
+		strftime(tData,sizeof(tData),"Server : (Joined) %X\n", localtime(&time_joined));
+		snprintf(sData,sizeof(sData),"%s%s",nData,tData);
+		Writen(sockfd,sData,strlen(sData));
 		
 		pthread_mutex_unlock(&connection_mutex);
 

@@ -6,7 +6,7 @@ join(int sockfd, char* str){
 	//Setting error messages for message input lengths and format;
 	char* format = "Server : JOIN <NICKNAME> <HOSTNAME> <REALNAME>\n";
 	char* nicklen = "Server : Nickname cannot exceed 10 characters\n";
-	char* hostlen = "Server : Hostname cannot exceed 10 characters\n";
+	char* hostlen = "Server : Hostname cannot exceed 20 characters\n";
 	char* reallen = "Server : Realname cannot exceed 20 characters\n";
 	char names[MAXLINE];
 	if(str != NULL && strcmp(str,"")!=0){
@@ -26,7 +26,7 @@ join(int sockfd, char* str){
 			if(strlen(nickname) > 10){
 				Writen(sockfd,nicklen, strlen(nicklen));
 			}
-			if(strlen(hostname) > 10){
+			if(strlen(hostname) > 20){
 				Writen(sockfd,hostlen, strlen(hostlen));
 			}
 			if(strlen(realname) > 10){

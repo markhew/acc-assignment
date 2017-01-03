@@ -2,6 +2,7 @@
 
 int validateJOIN(int, char*);
 
+
 void
 validate(int sockfd ,char* sendline){
 	char *cmd, *rest;
@@ -32,6 +33,9 @@ validate(int sockfd ,char* sendline){
 		if(rest == NULL || strcmp(rest,"") == 0){
 			printf("Client : Who is who?\n");
 		}
+		else{
+				Writen(sockfd,sendline,strlen(sendline));	
+		}
 	}
 
 	else if(strcmp(cmd,"TIME") == 0 || strcmp(cmd,"TIME\n") ==0 ||
@@ -51,7 +55,7 @@ int
 validateJOIN(int sockfd,char* names){
 	char* format = "Client : JOIN <NICKNAME> <HOSTNAME> <REALNAME>\n";
 	char* nicklen = "Client : Nickname cannot exceed 10 characters\n";
-	char* hostlen = "Client : Hostname cannot exceed 10 characters\n";
+	char* hostlen = "Client : Hostname cannot exceed 20 characters\n";
 	char* reallen = "CLient : Realname cannot exceed 20 characters\n";
 	
 	int valid = 1;
@@ -71,20 +75,23 @@ validateJOIN(int sockfd,char* names){
 			printf("%s\n", nicklen);
 			valid = 0;
 		}
-		else if(strlen(hostname) > 10){
+		else if(strlen(hostname) > 20){
 			printf("%s\n", hostlen);
 			valid = 0;
 		}
 		else if(strlen(realname) > 20){
 			printf("%s\n", reallen);
 			valid = 0;
-		}/* Potentially check host name 
-		else{
-			struct sockaddr_in	cliaddr;
-			socklen_t len = sizeof(cliaddr);
-			getsockname(sockfd, (SA*) &cliaddr, &len);
-			
-		}*/
+		}else{
+
+			gethostname(str, HOSTLEN); 
+
+			if(strcasecmp(hostname,str) != 0)
+			{
+				printf("Client : \"%s\" is not your hostname\n", hostname);
+				valid = 0;
+			}
+		}
 	}
 	else{
 		valid = 0;

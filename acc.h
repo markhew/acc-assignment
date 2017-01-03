@@ -30,6 +30,10 @@
 #define MAXCLIENTS 10
 #define NOCONN 0
 #define CONN 1
+#define NICKLEN 10
+#define HOSTLEN 20
+#define REALLEN 20
+
 /* Our own header for the programs that use threads.
    Include this file, instead of "unp.h". */
 
@@ -68,9 +72,9 @@ extern int max_idle_time;
 typedef struct connection
 {
 	int status;
-	char nickname[10];
-	char hostname[10];
-	char realname[20];
+	char nickname[NICKLEN];
+	char hostname[HOSTLEN];
+	char realname[REALLEN];
 	int sockfd;
 	time_t time_joined;
 	/* data */
@@ -83,5 +87,5 @@ typedef struct
 
 extern strCon connections[MAXCLIENTS]; //Array to store information on connections
 extern pthread_mutex_t connection_mutex;
-extern struct timeval timeout;
+struct timeval timeout;
 

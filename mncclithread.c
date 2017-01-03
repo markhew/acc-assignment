@@ -19,9 +19,13 @@ str_cli(FILE *fp_arg, int sockfd_arg)
 	/* does no pass argument */
 	Pthread_create(&tid, NULL, copyto, NULL);
 
+
 	while (Readline(sockfd, recvline, MAXLINE) > 0){
-		Fputs(recvline, stdout);
+		Fputs(recvline, stdout);	
+		Fputs("Hello > ", stdout);
+		fflush(stdout);
 	}
+
 }
 
 void *
