@@ -53,7 +53,7 @@ Testing QUIT without quit message
 
 
 Disclaimer
-The code for this assignment was based off practical 6 from the tutorials and thus uses the wrapper functions from the ACC textbook. 
+The code for this assignment was based off my tutorials and uses the wrapper functions from my Advanced Computer Communications textbook. This code was designed to be run on the redhat linux computers used at Curtin University.
 
 Assumptions
 I made the assumption that <hostname> does not need to be validated for the machine other than its character length.
